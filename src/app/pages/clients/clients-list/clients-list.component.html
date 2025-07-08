@@ -1,0 +1,33 @@
+<div>
+  <button (click)="showForm = true; selectedClient = null">Ajouter un client</button>
+
+  <app-client-form *ngIf="showForm" [client]="selectedClient" (ngSubmit)="onFormSubmit()" (close)="onFormClose()"></app-client-form>
+
+  <div *ngIf="loading">Chargement...</div>
+  <div *ngIf="error">{{ error }}</div>
+
+  <table *ngIf="!loading && clients.length">
+    <thead>
+      <tr>
+        <th>Nom</th>
+        <th>Email</th>
+        <th>Téléphone</th>
+        <th>Adresse</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let client of clients">
+        <td>{{ client.nom }}</td>
+        <td>{{ client.email }}</td>
+        <td>{{ client.telephone }}</td>
+        <td>{{ client.adresse }}</td>
+        <td>
+          <button (click)="editClient(client)">Modifier</button>
+          <button (click)="deleteClient(client.id)">Supprimer</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div *ngIf="!loading && !clients.length">Aucun client trouvé.</div>
+</div>

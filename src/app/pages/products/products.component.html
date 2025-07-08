@@ -1,0 +1,291 @@
+<div class="products-container">
+  <div class="products-header">
+    <h1>Gestion des produits</h1>
+    <p>Gérez votre catalogue de produits et le stock</p>
+  </div>
+
+  <!-- Statistiques rapides -->
+  <div class="stats-section">
+    <nz-row [nzGutter]="16">
+      <nz-col [nzSpan]="6" [nzXs]="24" [nzSm]="12" [nzMd]="6">
+        <nz-card>
+          <div class="stat-item">
+            <div class="stat-icon">
+              <span nz-icon nzType="inbox" nzTheme="outline"></span>
+            </div>
+            <div class="stat-content">
+              <div class="stat-number">{{ products.length }}</div>
+              <div class="stat-label">Total produits</div>
+            </div>
+          </div>
+        </nz-card>
+      </nz-col>
+      
+      <nz-col [nzSpan]="6" [nzXs]="24" [nzSm]="12" [nzMd]="6">
+        <nz-card>
+          <div class="stat-item">
+            <div class="stat-icon warning">
+              <span nz-icon nzType="exclamation-circle" nzTheme="outline"></span>
+            </div>
+            <div class="stat-content">
+              <div class="stat-number">{{ lowStockCount }}</div>
+              <div class="stat-label">Stock faible</div>
+            </div>
+          </div>
+        </nz-card>
+      </nz-col>
+      
+      <nz-col [nzSpan]="6" [nzXs]="24" [nzSm]="12" [nzMd]="6">
+        <nz-card>
+          <div class="stat-item">
+            <div class="stat-icon danger">
+              <span nz-icon nzType="close-circle" nzTheme="outline"></span>
+            </div>
+            <div class="stat-content">
+              <div class="stat-number">{{ outOfStockCount }}</div>
+              <div class="stat-label">En rupture</div>
+            </div>
+          </div>
+        </nz-card>
+      </nz-col>
+      
+      <nz-col [nzSpan]="6" [nzXs]="24" [nzSm]="12" [nzMd]="6">
+        <nz-card>
+          <div class="stat-item">
+            <div class="stat-icon success">
+              <span nz-icon nzType="check-circle" nzTheme="outline"></span>
+            </div>
+            <div class="stat-content">
+              <div class="stat-number">{{ normalStockCount }}</div>
+              <div class="stat-label">Stock OK</div>
+            </div>
+          </div>
+        </nz-card>
+      </nz-col>
+    </nz-row>
+  </div>
+
+  <nz-card>
+    <div class="products-actions">
+      <div class="search-section">
+        <nz-input-group nzPrefixIcon="search" nzSize="large">
+          <input 
+            nz-input 
+            placeholder="Rechercher un produit..." 
+            [(ngModel)]="searchValue" />
+        </nz-input-group>
+      </div>
+      
+      <div class="filter-section">
+        <nz-select 
+          [(ngModel)]="selectedCategory" 
+          placeholder="Filtrer par catégorie"
+          nzAllowClear
+          nzSize="large">
+          <nz-option nzValue="" nzLabel="Toutes les catégories"></nz-option>
+          <nz-option *ngFor="let category of categories" [nzValue]="category" [nzLabel]="category"></nz-option>
+        </nz-select>
+      </div>
+      
+      <div class="action-buttons">
+        <button nz-button nzType="primary" nzSize="large" (click)="showModal()">
+          <span nz-icon nzType="plus"></span>
+          Ajouter un produit
+        </button>
+      </div>
+    </div>
+
+    <nz-table 
+      #productsTable 
+      [nzData]="getFilteredProducts()" 
+      [nzPageSize]="10"
+      [nzShowSizeChanger]="true"
+      [nzShowQuickJumper]="true"
+      [nzShowTotal]="totalTemplate">
+      
+      <thead>
+        <tr>
+          <th>Produit</th>
+          <th>Catégorie</th>
+          <th>Prix</th>
+          <th>Stock</th>
+          <th>Marge</th>
+          <th>Statut</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      
+      <tbody>
+        <tr *ngFor="let product of productsTable.data">
+          <td>
+            <div class="product-info">
+              <strong>{{ product.name }}</strong>
+              <small>{{ product.description }}</small>
+              <div class="sku">SKU: {{ product.sku }}</div>
+            </div>
+          </td>
+          <td>
+            <nz-tag>{{ product.category }}</nz-tag>
+          </td>
+          <td>
+            <div class="price-info">
+              <div class="price">{{ product.price }}€</div>
+              <small class="cost">Coût: {{ product.cost }}€</small>
+            </div>
+          </td>
+          <td>
+            <div class="stock-info">
+              <div class="stock-number">{{ product.stock }}</div>
+              <nz-progress 
+                [nzPercent]="getStockPercent(product.stock, product.minStock)" 
+                [nzShowInfo]="false"
+                [nzStrokeColor]="getStockStatusColor(product.stock, product.minStock)"
+                nzSize="small">
+              </nz-progress>
+              <small>Min: {{ product.minStock }}</small>
+            </div>
+          </td>
+          <td>
+            <div class="margin-info">
+              <span class="margin-percent">{{ calculateMargin(product.price, product.cost) | number:'1.0-1' }}%</span>
+            </div>
+          </td>
+          <td>
+            <nz-tag [nzColor]="getStockStatusColor(product.stock, product.minStock)">
+              {{ getStockStatus(product.stock, product.minStock) === 'rupture' ? 'Rupture' : 
+                 getStockStatus(product.stock, product.minStock) === 'faible' ? 'Faible' : 'Normal' }}
+            </nz-tag>
+          </td>
+          <td>
+            <div class="action-buttons">
+              <button nz-button nzType="default" nzSize="small" (click)="showModal(product)">
+                <span nz-icon nzType="edit"></span>
+              </button>
+              <nz-popconfirm
+                nzTitle="Êtes-vous sûr de vouloir supprimer ce produit ?"
+                nzOkText="Oui"
+                nzCancelText="Non"
+                (nzOnConfirm)="deleteProduct(product)">
+                <button nz-button nzType="default" nzDanger nzSize="small">
+                  <span nz-icon nzType="delete"></span>
+                </button>
+              </nz-popconfirm>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </nz-card>
+</div>
+
+<!-- Modal pour ajouter/modifier un produit -->
+<nz-modal
+  [(nzVisible)]="isModalVisible"
+  [nzTitle]="isEditMode ? 'Modifier le produit' : 'Ajouter un produit'"
+  (nzOnCancel)="handleCancel()"
+  (nzOnOk)="handleOk()"
+  [nzOkText]="isEditMode ? 'Modifier' : 'Ajouter'"
+  nzCancelText="Annuler"
+  [nzWidth]="800">
+  
+  <form nz-form [formGroup]="productForm" *nzModalContent>
+    <nz-row [nzGutter]="16">
+      <nz-col [nzSpan]="12">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="8" nzRequired>Nom du produit</nz-form-label>
+          <nz-form-control [nzSpan]="16" nzErrorTip="Le nom est requis">
+            <input nz-input formControlName="name" placeholder="Nom du produit" />
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      
+      <nz-col [nzSpan]="12">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="8" nzRequired>Catégorie</nz-form-label>
+          <nz-form-control [nzSpan]="16" nzErrorTip="La catégorie est requise">
+            <nz-select formControlName="category" placeholder="Sélectionner une catégorie">
+              <nz-option *ngFor="let category of categories" [nzValue]="category" [nzLabel]="category"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+    </nz-row>
+
+    <nz-form-item>
+      <nz-form-label [nzSpan]="4" nzRequired>Description</nz-form-label>
+      <nz-form-control [nzSpan]="20" nzErrorTip="La description est requise">
+        <textarea nz-input formControlName="description" placeholder="Description du produit" rows="3"></textarea>
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-row [nzGutter]="16">
+      <nz-col [nzSpan]="8">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="12" nzRequired>Prix de vente</nz-form-label>
+          <nz-form-control [nzSpan]="12" nzErrorTip="Le prix est requis">
+            <nz-input-number formControlName="price" [nzMin]="0" [nzStep]="0.01" placeholder="0.00" nzAddOnAfter="€"></nz-input-number>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      
+      <nz-col [nzSpan]="8">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="12" nzRequired>Coût d'achat</nz-form-label>
+          <nz-form-control [nzSpan]="12" nzErrorTip="Le coût est requis">
+            <nz-input-number formControlName="cost" [nzMin]="0" [nzStep]="0.01" placeholder="0.00" nzAddOnAfter="€"></nz-input-number>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      
+      <nz-col [nzSpan]="8">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="12" nzRequired>SKU</nz-form-label>
+          <nz-form-control [nzSpan]="12" nzErrorTip="Le SKU est requis">
+            <input nz-input formControlName="sku" placeholder="Code SKU" />
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+    </nz-row>
+
+    <nz-row [nzGutter]="16">
+      <nz-col [nzSpan]="8">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="12" nzRequired>Stock actuel</nz-form-label>
+          <nz-form-control [nzSpan]="12" nzErrorTip="Le stock est requis">
+            <nz-input-number formControlName="stock" [nzMin]="0" placeholder="0"></nz-input-number>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      
+      <nz-col [nzSpan]="8">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="12" nzRequired>Stock minimum</nz-form-label>
+          <nz-form-control [nzSpan]="12" nzErrorTip="Le stock minimum est requis">
+            <nz-input-number formControlName="minStock" [nzMin]="0" placeholder="0"></nz-input-number>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+      
+      <nz-col [nzSpan]="8">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="12">Fournisseur</nz-form-label>
+          <nz-form-control [nzSpan]="12">
+            <input nz-input formControlName="supplier" placeholder="Nom du fournisseur" />
+          </nz-form-control>
+        </nz-form-item>
+      </nz-col>
+    </nz-row>
+
+    <nz-form-item>
+      <nz-form-label [nzSpan]="4">Notes</nz-form-label>
+      <nz-form-control [nzSpan]="20">
+        <textarea nz-input formControlName="notes" placeholder="Notes supplémentaires (optionnel)" rows="2"></textarea>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+</nz-modal>
+
+<!-- Template pour le total -->
+<ng-template #totalTemplate let-total>
+  Total {{ total }} produits
+</ng-template> 

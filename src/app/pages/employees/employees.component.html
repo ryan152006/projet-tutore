@@ -1,0 +1,103 @@
+<div class="employees-container">
+  <div class="employees-header">
+    <h1>Gestion des employés</h1>
+    <p>Gérez votre équipe et les ressources humaines</p>
+  </div>
+
+  <nz-card>
+    <div class="employees-actions">
+      <div class="search-section">
+        <nz-input-group nzPrefixIcon="search" nzSize="large">
+          <input 
+            nz-input 
+            placeholder="Rechercher un employé..." 
+            [(ngModel)]="searchValue" />
+        </nz-input-group>
+      </div>
+      
+      <div class="action-buttons">
+        <button nz-button nzType="primary" nzSize="large" (click)="showModal()">
+          <span nz-icon nzType="plus"></span>
+          Ajouter un employé
+        </button>
+      </div>
+    </div>
+
+    <nz-table 
+      #employeesTable 
+      [nzData]="getFilteredEmployees()" 
+      [nzPageSize]="10"
+      [nzShowSizeChanger]="true"
+      [nzShowQuickJumper]="true">
+      
+      <thead>
+        <tr>
+          <th>Employé</th>
+          <th>Contact</th>
+          <th>Département</th>
+          <th>Poste</th>
+          <th>Salaire</th>
+          <th>Date d'embauche</th>
+          <th>Statut</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      
+      <tbody>
+        <tr *ngFor="let employee of employeesTable.data">
+          <td>
+            <div class="employee-info">
+              <nz-avatar nzIcon="user"></nz-avatar>
+              <div class="employee-details">
+                <strong>{{ getFullName(employee) }}</strong>
+                <small>{{ employee.email }}</small>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div class="contact-info">
+              <div>{{ employee.phone }}</div>
+              <small>{{ employee.email }}</small>
+            </div>
+          </td>
+          <td>
+            <nz-tag>{{ employee.department }}</nz-tag>
+          </td>
+          <td>
+            <span>{{ employee.position }}</span>
+          </td>
+          <td>
+            <span class="salary">{{ employee.salary }}€</span>
+          </td>
+          <td>
+            <span>{{ employee.hireDate | date:'dd/MM/yyyy' }}</span>
+          </td>
+          <td>
+            <nz-tag [nzColor]="getStatusColor(employee.status)">
+              {{ employee.status === 'active' ? 'Actif' : 'Inactif' }}
+            </nz-tag>
+          </td>
+          <td>
+            <div class="action-buttons">
+              <button nz-button nzType="default" nzSize="small" (click)="showModal(employee)">
+                <span nz-icon nzType="edit"></span>
+              </button>
+              <button nz-button nzType="default" nzSize="small" (click)="generatePayslip(employee)">
+                <span nz-icon nzType="file-text"></span>
+              </button>
+              <nz-popconfirm
+                nzTitle="Êtes-vous sûr de vouloir supprimer cet employé ?"
+                nzOkText="Oui"
+                nzCancelText="Non"
+                (nzOnConfirm)="deleteEmployee(employee)">
+                <button nz-button nzType="default" nzDanger nzSize="small">
+                  <span nz-icon nzType="delete"></span>
+                </button>
+              </nz-popconfirm>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </nz-card>
+</div> 

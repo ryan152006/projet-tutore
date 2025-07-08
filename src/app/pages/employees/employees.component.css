@@ -1,0 +1,106 @@
+.employees-container {
+  padding: 24px;
+}
+
+.employees-header {
+  margin-bottom: 24px;
+}
+
+.employees-header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #262626;
+  margin-bottom: 8px;
+}
+
+.employees-header p {
+  color: #8c8c8c;
+  font-size: 16px;
+  margin: 0;
+}
+
+.employees-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  gap: 16px;
+}
+
+.search-section {
+  flex: 1;
+  max-width: 300px;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.employee-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.employee-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.employee-details strong {
+  color: #262626;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.employee-details small {
+  color: #8c8c8c;
+  font-size: 12px;
+}
+
+.contact-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-info div {
+  color: #262626;
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+
+.contact-info small {
+  color: #8c8c8c;
+  font-size: 12px;
+}
+
+.salary {
+  font-weight: 600;
+  color: #52c41a;
+  font-size: 14px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .employees-container {
+    padding: 16px;
+  }
+  
+  .employees-header h1 {
+    font-size: 24px;
+  }
+  
+  .employees-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .search-section {
+    max-width: none;
+  }
+  
+  .action-buttons {
+    justify-content: center;
+  }
+} 

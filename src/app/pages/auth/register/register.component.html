@@ -1,0 +1,127 @@
+<div class="register-container">
+  <div class="register-background">
+    <div class="register-card">
+      <div class="register-logo" style="text-align:center; margin-bottom: 16px;">
+        <img src="/assets/logo.png" alt="Logo Gestion Pro" style="height:60px; width:auto;" />
+      </div>
+      <div class="register-header">
+        <h1>Créer un compte</h1>
+        <p>Rejoignez Gestion Pro pour optimiser votre entreprise</p>
+      </div>
+
+      <form nz-form [formGroup]="registerForm" (ngSubmit)="submitForm()" class="register-form">
+        <div class="form-row">
+          <nz-form-item>
+            <nz-form-label [nzSpan]="24" nzRequired>Prénom</nz-form-label>
+            <nz-form-control nzErrorTip="Le prénom est requis">
+              <input nz-input formControlName="firstName" placeholder="Votre prénom" />
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item>
+            <nz-form-label [nzSpan]="24" nzRequired>Nom</nz-form-label>
+            <nz-form-control nzErrorTip="Le nom est requis">
+              <input nz-input formControlName="lastName" placeholder="Votre nom" />
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+
+        <nz-form-item>
+          <nz-form-label [nzSpan]="24" nzRequired>Email</nz-form-label>
+          <nz-form-control nzErrorTip="Veuillez saisir un email valide">
+            <nz-input-group nzPrefixIcon="mail">
+              <input type="email" nz-input formControlName="email" placeholder="Votre email" />
+            </nz-input-group>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSpan]="24" nzRequired>Téléphone</nz-form-label>
+          <nz-form-control nzErrorTip="Le téléphone est requis">
+            <nz-input-group nzPrefixIcon="phone">
+              <input nz-input formControlName="phone" placeholder="Votre téléphone" />
+            </nz-input-group>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSpan]="24" nzRequired>Nom de l'entreprise</nz-form-label>
+          <nz-form-control nzErrorTip="Le nom de l'entreprise est requis">
+            <nz-input-group nzPrefixIcon="bank">
+              <input nz-input formControlName="companyName" placeholder="Nom de votre entreprise" />
+            </nz-input-group>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSpan]="24" nzRequired>Adresse de l'entreprise</nz-form-label>
+          <nz-form-control nzErrorTip="L'adresse est requise">
+            <input nz-input formControlName="companyAddress" placeholder="Adresse de l'entreprise" />
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSpan]="24">Téléphone de l'entreprise</nz-form-label>
+          <nz-form-control>
+            <input nz-input formControlName="companyPhone" placeholder="Téléphone de l'entreprise" />
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSpan]="24">SIRET</nz-form-label>
+          <nz-form-control>
+            <input nz-input formControlName="companySiret" placeholder="SIRET de l'entreprise" />
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSpan]="24" nzRequired>Rôle</nz-form-label>
+          <nz-form-control nzErrorTip="Veuillez sélectionner un rôle">
+            <nz-select formControlName="role" placeholder="Sélectionnez votre rôle">
+              <nz-option nzValue="admin" nzLabel="Administrateur"></nz-option>
+              <nz-option nzValue="employee" nzLabel="Employé"></nz-option>
+              <nz-option nzValue="manager" nzLabel="Manager"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSpan]="24" nzRequired>Mot de passe</nz-form-label>
+          <nz-form-control nzErrorTip="Le mot de passe doit contenir au moins 8 caractères">
+            <nz-input-group nzPrefixIcon="lock">
+              <input type="password" nz-input formControlName="password" placeholder="Votre mot de passe" />
+            </nz-input-group>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSpan]="24" nzRequired>Confirmer le mot de passe</nz-form-label>
+          <nz-form-control nzErrorTip="Les mots de passe ne correspondent pas">
+            <nz-input-group nzPrefixIcon="lock">
+              <input type="password" nz-input formControlName="confirmPassword" placeholder="Confirmez votre mot de passe" />
+            </nz-input-group>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-control>
+            <label nz-checkbox formControlName="acceptTerms">
+              J'accepte les <a href="#" target="_blank">conditions d'utilisation</a> et la <a href="#" target="_blank">politique de confidentialité</a>
+            </label>
+          </nz-form-control>
+        </nz-form-item>
+
+        <button nz-button nzType="primary" nzBlock [nzLoading]="isLoading" type="submit">
+          Créer mon compte
+        </button>
+      </form>
+
+      <div class="login-link">
+        <p>
+          Déjà un compte ? 
+          <a routerLink="/auth/login">Se connecter</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div> 

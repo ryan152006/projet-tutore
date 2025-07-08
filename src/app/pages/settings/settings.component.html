@@ -1,0 +1,392 @@
+<div class="settings-container">
+  <div class="settings-header">
+    <h1>Paramètres</h1>
+    <p>Configurez votre application et vos préférences</p>
+  </div>
+
+  <nz-tabs>
+    <!-- Paramètres de l'entreprise -->
+    <nz-tab nzTitle="Entreprise">
+      <nz-card>
+        <form nz-form [formGroup]="companyForm">
+          <nz-row [nzGutter]="16">
+            <nz-col [nzSpan]="12">
+              <nz-form-item>
+                <nz-form-label [nzSpan]="8" nzRequired>Nom de l'entreprise</nz-form-label>
+                <nz-form-control [nzSpan]="16" nzErrorTip="Le nom est requis">
+                  <input nz-input formControlName="name" placeholder="Nom de votre entreprise" />
+                </nz-form-control>
+              </nz-form-item>
+            </nz-col>
+            
+            <nz-col [nzSpan]="12">
+              <nz-form-item>
+                <nz-form-label [nzSpan]="8" nzRequired>Email</nz-form-label>
+                <nz-form-control [nzSpan]="16" nzErrorTip="Email invalide">
+                  <input nz-input formControlName="email" placeholder="contact@entreprise.fr" />
+                </nz-form-control>
+              </nz-form-item>
+            </nz-col>
+          </nz-row>
+
+          <nz-row [nzGutter]="16">
+            <nz-col [nzSpan]="12">
+              <nz-form-item>
+                <nz-form-label [nzSpan]="8" nzRequired>Téléphone</nz-form-label>
+                <nz-form-control [nzSpan]="16" nzErrorTip="Le téléphone est requis">
+                  <input nz-input formControlName="phone" placeholder="0123456789" />
+                </nz-form-control>
+              </nz-form-item>
+            </nz-col>
+            
+            <nz-col [nzSpan]="12">
+              <nz-form-item>
+                <nz-form-label [nzSpan]="8">Site web</nz-form-label>
+                <nz-form-control [nzSpan]="16">
+                  <input nz-input formControlName="website" placeholder="www.entreprise.fr" />
+                </nz-form-control>
+              </nz-form-item>
+            </nz-col>
+          </nz-row>
+
+          <nz-form-item>
+            <nz-form-label [nzSpan]="4" nzRequired>Adresse</nz-form-label>
+            <nz-form-control [nzSpan]="20" nzErrorTip="L'adresse est requise">
+              <textarea nz-input formControlName="address" placeholder="Adresse complète de l'entreprise" rows="3"></textarea>
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-row [nzGutter]="16">
+            <nz-col [nzSpan]="12">
+              <nz-form-item>
+                <nz-form-label [nzSpan]="8">SIRET</nz-form-label>
+                <nz-form-control [nzSpan]="16">
+                  <input nz-input formControlName="siret" placeholder="12345678901234" />
+                </nz-form-control>
+              </nz-form-item>
+            </nz-col>
+            
+            <nz-col [nzSpan]="12">
+              <nz-form-item>
+                <nz-form-label [nzSpan]="8">N° TVA</nz-form-label>
+                <nz-form-control [nzSpan]="16">
+                  <input nz-input formControlName="tvaNumber" placeholder="FR12345678901" />
+                </nz-form-control>
+              </nz-form-item>
+            </nz-col>
+          </nz-row>
+
+          <div class="form-actions">
+            <button nz-button nzType="primary" (click)="saveCompanySettings()">
+              <span nz-icon nzType="save"></span>
+              Sauvegarder
+            </button>
+          </div>
+        </form>
+      </nz-card>
+    </nz-tab>
+
+    <!-- Paramètres de facturation -->
+    <nz-tab nzTitle="Facturation">
+      <nz-card>
+        <form nz-form [formGroup]="invoiceForm">
+          <nz-row [nzGutter]="16">
+            <nz-col [nzSpan]="8">
+              <nz-form-item>
+                <nz-form-label [nzSpan]="12" nzRequired>Préfixe facture</nz-form-label>
+                <nz-form-control [nzSpan]="12" nzErrorTip="Le préfixe est requis">
+                  <input nz-input formControlName="prefix" placeholder="FACT" />
+                </nz-form-control>
+              </nz-form-item>
+            </nz-col>
+            
+            <nz-col [nzSpan]="8">
+              <nz-form-item>
+                <nz-form-label [nzSpan]="12" nzRequired>Prochain numéro</nz-form-label>
+                <nz-form-control [nzSpan]="12" nzErrorTip="Le numéro est requis">
+                  <nz-input-number formControlName="nextNumber" [nzMin]="1" placeholder="1"></nz-input-number>
+                </nz-form-control>
+              </nz-form-item>
+            </nz-col>
+            
+            <nz-col [nzSpan]="8">
+              <nz-form-item>
+                <nz-form-label [nzSpan]="12" nzRequired>Devise</nz-form-label>
+                <nz-form-control [nzSpan]="12" nzErrorTip="La devise est requise">
+                  <nz-select formControlName="currency" placeholder="Sélectionner une devise">
+                    <nz-option *ngFor="let currency of currencies" [nzValue]="currency.code" [nzLabel]="currency.name"></nz-option>
+                  </nz-select>
+                </nz-form-control>
+              </nz-form-item>
+            </nz-col>
+          </nz-row>
+
+          <nz-row [nzGutter]="16">
+            <nz-col [nzSpan]="8">
+              <nz-form-item>
+                <nz-form-label [nzSpan]="12" nzRequired>Taux de TVA (%)</nz-form-label>
+                <nz-form-control [nzSpan]="12" nzErrorTip="Le taux est requis">
+                  <nz-input-number formControlName="taxRate" [nzMin]="0" [nzMax]="100" placeholder="20"></nz-input-number>
+                </nz-form-control>
+              </nz-form-item>
+            </nz-col>
+            
+            <nz-col [nzSpan]="8">
+              <nz-form-item>
+                <nz-form-label [nzSpan]="12" nzRequired>Délai de paiement</nz-form-label>
+                <nz-form-control [nzSpan]="12" nzErrorTip="Le délai est requis">
+                  <nz-input-number formControlName="paymentTerms" [nzMin]="0" placeholder="30"></nz-input-number>
+                </nz-form-control>
+              </nz-form-item>
+            </nz-col>
+            
+            <nz-col [nzSpan]="8">
+              <nz-form-item>
+                <nz-form-label [nzSpan]="12">Logo sur facture</nz-form-label>
+                <nz-form-control [nzSpan]="12">
+                  <nz-switch formControlName="logo"></nz-switch>
+                </nz-form-control>
+              </nz-form-item>
+            </nz-col>
+          </nz-row>
+
+          <nz-form-item>
+            <nz-form-label [nzSpan]="4">Pied de page</nz-form-label>
+            <nz-form-control [nzSpan]="20">
+              <textarea nz-input formControlName="footer" placeholder="Texte du pied de page des factures" rows="2"></textarea>
+            </nz-form-control>
+          </nz-form-item>
+
+          <div class="form-actions">
+            <button nz-button nzType="primary" (click)="saveInvoiceSettings()">
+              <span nz-icon nzType="save"></span>
+              Sauvegarder
+            </button>
+          </div>
+        </form>
+      </nz-card>
+    </nz-tab>
+
+    <!-- Paramètres de notification -->
+    <nz-tab nzTitle="Notifications">
+      <nz-card>
+        <form nz-form [formGroup]="notificationForm">
+          <nz-row [nzGutter]="16">
+            <nz-col [nzSpan]="12">
+              <nz-form-item>
+                <nz-form-label [nzSpan]="12">Notifications email</nz-form-label>
+                <nz-form-control [nzSpan]="12">
+                  <nz-switch formControlName="emailNotifications"></nz-switch>
+                </nz-form-control>
+              </nz-form-item>
+            </nz-col>
+            
+            <nz-col [nzSpan]="12">
+              <nz-form-item>
+                <nz-form-label [nzSpan]="12">Alertes stock faible</nz-form-label>
+                <nz-form-control [nzSpan]="12">
+                  <nz-switch formControlName="lowStockAlerts"></nz-switch>
+                </nz-form-control>
+              </nz-form-item>
+            </nz-col>
+          </nz-row>
+
+          <nz-row [nzGutter]="16">
+            <nz-col [nzSpan]="12">
+              <nz-form-item>
+                <nz-form-label [nzSpan]="12">Alertes nouvelles commandes</nz-form-label>
+                <nz-form-control [nzSpan]="12">
+                  <nz-switch formControlName="newOrderAlerts"></nz-switch>
+                </nz-form-control>
+              </nz-form-item>
+            </nz-col>
+            
+            <nz-col [nzSpan]="12">
+              <nz-form-item>
+                <nz-form-label [nzSpan]="12">Rappels de paiement</nz-form-label>
+                <nz-form-control [nzSpan]="12">
+                  <nz-switch formControlName="paymentReminders"></nz-switch>
+                </nz-form-control>
+              </nz-form-item>
+            </nz-col>
+          </nz-row>
+
+          <nz-row [nzGutter]="16">
+            <nz-col [nzSpan]="8">
+              <nz-form-item>
+                <nz-form-label [nzSpan]="12" nzRequired>Langue</nz-form-label>
+                <nz-form-control [nzSpan]="12" nzErrorTip="La langue est requise">
+                  <nz-select formControlName="language" placeholder="Sélectionner une langue">
+                    <nz-option *ngFor="let language of languages" [nzValue]="language.code" [nzLabel]="language.name"></nz-option>
+                  </nz-select>
+                </nz-form-control>
+              </nz-form-item>
+            </nz-col>
+            
+            <nz-col [nzSpan]="8">
+              <nz-form-item>
+                <nz-form-label [nzSpan]="12" nzRequired>Fuseau horaire</nz-form-label>
+                <nz-form-control [nzSpan]="12" nzErrorTip="Le fuseau horaire est requis">
+                  <nz-select formControlName="timezone" placeholder="Sélectionner un fuseau">
+                    <nz-option *ngFor="let timezone of timezones" [nzValue]="timezone.value" [nzLabel]="timezone.label"></nz-option>
+                  </nz-select>
+                </nz-form-control>
+              </nz-form-item>
+            </nz-col>
+            
+            <nz-col [nzSpan]="8">
+              <nz-form-item>
+                <nz-form-label [nzSpan]="12">Fréquence des rapports</nz-form-label>
+                <nz-form-control [nzSpan]="12">
+                  <nz-select formControlName="reportSchedule" placeholder="Sélectionner une fréquence">
+                    <nz-option nzValue="daily" nzLabel="Quotidien"></nz-option>
+                    <nz-option nzValue="weekly" nzLabel="Hebdomadaire"></nz-option>
+                    <nz-option nzValue="monthly" nzLabel="Mensuel"></nz-option>
+                  </nz-select>
+                </nz-form-control>
+              </nz-form-item>
+            </nz-col>
+          </nz-row>
+
+          <div class="form-actions">
+            <button nz-button nzType="primary" (click)="saveNotificationSettings()">
+              <span nz-icon nzType="save"></span>
+              Sauvegarder
+            </button>
+          </div>
+        </form>
+      </nz-card>
+    </nz-tab>
+
+    <!-- Paramètres de sécurité -->
+    <nz-tab nzTitle="Sécurité">
+      <nz-card>
+        <form nz-form [formGroup]="securityForm">
+          <nz-row [nzGutter]="16">
+            <nz-col [nzSpan]="12">
+              <nz-form-item>
+                <nz-form-label [nzSpan]="12">Authentification à deux facteurs</nz-form-label>
+                <nz-form-control [nzSpan]="12">
+                  <nz-switch formControlName="twoFactorAuth"></nz-switch>
+                </nz-form-control>
+              </nz-form-item>
+            </nz-col>
+            
+            <nz-col [nzSpan]="12">
+              <nz-form-item>
+                <nz-form-label [nzSpan]="12" nzRequired>Délai de session (min)</nz-form-label>
+                <nz-form-control [nzSpan]="12" nzErrorTip="Le délai est requis">
+                  <nz-input-number formControlName="sessionTimeout" [nzMin]="5" placeholder="30"></nz-input-number>
+                </nz-form-control>
+              </nz-form-item>
+            </nz-col>
+          </nz-row>
+
+          <nz-row [nzGutter]="16">
+            <nz-col [nzSpan]="12">
+              <nz-form-item>
+                <nz-form-label [nzSpan]="12" nzRequired>Expiration mot de passe (jours)</nz-form-label>
+                <nz-form-control [nzSpan]="12" nzErrorTip="La durée est requise">
+                  <nz-input-number formControlName="passwordExpiry" [nzMin]="30" placeholder="90"></nz-input-number>
+                </nz-form-control>
+              </nz-form-item>
+            </nz-col>
+            
+            <nz-col [nzSpan]="12">
+              <nz-form-item>
+                <nz-form-label [nzSpan]="12" nzRequired>Tentatives de connexion</nz-form-label>
+                <nz-form-control [nzSpan]="12" nzErrorTip="Le nombre est requis">
+                  <nz-input-number formControlName="loginAttempts" [nzMin]="1" placeholder="3"></nz-input-number>
+                </nz-form-control>
+              </nz-form-item>
+            </nz-col>
+          </nz-row>
+
+          <nz-form-item>
+            <nz-form-label [nzSpan]="4" nzRequired>Fréquence de sauvegarde</nz-form-label>
+            <nz-form-control [nzSpan]="20" nzErrorTip="La fréquence est requise">
+              <nz-select formControlName="backupFrequency" placeholder="Sélectionner une fréquence">
+                <nz-option nzValue="daily" nzLabel="Quotidienne"></nz-option>
+                <nz-option nzValue="weekly" nzLabel="Hebdomadaire"></nz-option>
+                <nz-option nzValue="monthly" nzLabel="Mensuelle"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+
+          <div class="form-actions">
+            <button nz-button nzType="primary" (click)="saveSecuritySettings()">
+              <span nz-icon nzType="save"></span>
+              Sauvegarder
+            </button>
+          </div>
+        </form>
+      </nz-card>
+    </nz-tab>
+  </nz-tabs>
+
+  <!-- Actions système -->
+  <div class="system-actions">
+    <nz-card nzTitle="Actions système">
+      <nz-row [nzGutter]="16">
+        <nz-col [nzSpan]="8" [nzXs]="24" [nzSm]="12" [nzMd]="8">
+          <div class="action-card">
+            <h3>Export des paramètres</h3>
+            <p>Exporter tous les paramètres actuels dans un fichier de sauvegarde</p>
+            <button nz-button nzType="default" (click)="exportSettings()">
+              <span nz-icon nzType="download"></span>
+              Exporter
+            </button>
+          </div>
+        </nz-col>
+        
+        <nz-col [nzSpan]="8" [nzXs]="24" [nzSm]="12" [nzMd]="8">
+          <div class="action-card">
+            <h3>Import des paramètres</h3>
+            <p>Importer des paramètres depuis un fichier de sauvegarde</p>
+            <button nz-button nzType="default" (click)="importSettings()">
+              <span nz-icon nzType="upload"></span>
+              Importer
+            </button>
+          </div>
+        </nz-col>
+        
+        <nz-col [nzSpan]="8" [nzXs]="24" [nzSm]="12" [nzMd]="8">
+          <div class="action-card">
+            <h3>Réinitialisation</h3>
+            <p>Remettre tous les paramètres à leurs valeurs par défaut</p>
+            <button nz-button nzType="default" nzDanger (click)="resetSettings()">
+              <span nz-icon nzType="reload"></span>
+              Réinitialiser
+            </button>
+          </div>
+        </nz-col>
+      </nz-row>
+
+      <nz-divider></nz-divider>
+
+      <nz-row [nzGutter]="16">
+        <nz-col [nzSpan]="12" [nzXs]="24" [nzSm]="12">
+          <div class="action-card">
+            <h3>Sauvegarde des données</h3>
+            <p>Créer une sauvegarde complète de toutes les données</p>
+            <button nz-button nzType="primary" (click)="backupData()">
+              <span nz-icon nzType="cloud-upload"></span>
+              Sauvegarder
+            </button>
+          </div>
+        </nz-col>
+        
+        <nz-col [nzSpan]="12" [nzXs]="24" [nzSm]="12">
+          <div class="action-card">
+            <h3>Restauration des données</h3>
+            <p>Restaurer les données depuis une sauvegarde</p>
+            <button nz-button nzType="default" (click)="restoreData()">
+              <span nz-icon nzType="cloud-download"></span>
+              Restaurer
+            </button>
+          </div>
+        </nz-col>
+      </nz-row>
+    </nz-card>
+  </div>
+</div> 

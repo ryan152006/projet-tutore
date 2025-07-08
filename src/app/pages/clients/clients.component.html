@@ -1,0 +1,141 @@
+<div class="clients-container">
+  <div class="clients-header">
+    <h1>Gestion des clients</h1>
+    <p>Gérez vos clients et leurs informations</p>
+  </div>
+
+  <nz-card>
+    <div class="clients-actions">
+      <div class="search-section">
+        <nz-input-group nzPrefixIcon="search" nzSize="large">
+          <input 
+            nz-input 
+            placeholder="Rechercher un client..." 
+            [(ngModel)]="searchValue"
+            (ngModelChange)="searchValue = $event" />
+        </nz-input-group>
+      </div>
+      
+      <div class="action-buttons">
+        <button nz-button nzType="primary" nzSize="large" (click)="showModal()">
+          <span nz-icon nzType="plus"></span>
+          Ajouter un client
+        </button>
+      </div>
+    </div>
+
+    <nz-table 
+      #clientsTable 
+      [nzData]="clients" 
+      [nzPageSize]="10"
+      [nzShowSizeChanger]="true"
+      [nzShowQuickJumper]="true"
+      [nzShowTotal]="totalTemplate">
+      
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th>Email</th>
+          <th>Téléphone</th>
+          <th>Entreprise</th>
+          <th>Statut</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      
+      <tbody>
+        <tr *ngFor="let client of clientsTable.data">
+          <td>
+            <div class="client-info">
+              <strong>{{ client.name }}</strong>
+              <small>{{ client.address }}</small>
+            </div>
+          </td>
+          <td>{{ client.email }}</td>
+          <td>{{ client.phone }}</td>
+          <td>{{ client.company || '-' }}</td>
+          <td>
+            <nz-tag [nzColor]="getStatusColor(client.status)">
+              {{ client.status === 'active' ? 'Actif' : 'Inactif' }}
+            </nz-tag>
+          </td>
+          <td>
+            <div class="action-buttons">
+              <button nz-button nzType="default" nzSize="small" (click)="showModal(client)">
+                <span nz-icon nzType="edit"></span>
+              </button>
+              <nz-popconfirm
+                nzTitle="Êtes-vous sûr de vouloir supprimer ce client ?"
+                nzOkText="Oui"
+                nzCancelText="Non"
+                (nzOnConfirm)="deleteClient(client)">
+                <button nz-button nzType="default" nzDanger nzSize="small">
+                  <span nz-icon nzType="delete"></span>
+                </button>
+              </nz-popconfirm>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </nz-card>
+</div>
+
+<!-- Modal pour ajouter/modifier un client -->
+<nz-modal
+  [(nzVisible)]="isModalVisible"
+  [nzTitle]="isEditMode ? 'Modifier le client' : 'Ajouter un client'"
+  (nzOnCancel)="handleCancel()"
+  (nzOnOk)="handleOk()"
+  [nzOkText]="isEditMode ? 'Modifier' : 'Ajouter'"
+  nzCancelText="Annuler">
+  
+  <form nz-form [formGroup]="clientForm" *nzModalContent>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="6" nzRequired>Nom complet</nz-form-label>
+      <nz-form-control [nzSpan]="18" nzErrorTip="Le nom est requis">
+        <input nz-input formControlName="name" placeholder="Nom et prénom" />
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-label [nzSpan]="6" nzRequired>Email</nz-form-label>
+      <nz-form-control [nzSpan]="18" nzErrorTip="Veuillez saisir un email valide">
+        <input type="email" nz-input formControlName="email" placeholder="email@exemple.com" />
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-label [nzSpan]="6" nzRequired>Téléphone</nz-form-label>
+      <nz-form-control [nzSpan]="18" nzErrorTip="Le téléphone est requis">
+        <input nz-input formControlName="phone" placeholder="0123456789" />
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-label [nzSpan]="6" nzRequired>Adresse</nz-form-label>
+      <nz-form-control [nzSpan]="18" nzErrorTip="L'adresse est requise">
+        <textarea nz-input formControlName="address" placeholder="Adresse complète" rows="3"></textarea>
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-label [nzSpan]="6">Entreprise</nz-form-label>
+      <nz-form-control [nzSpan]="18">
+        <input nz-input formControlName="company" placeholder="Nom de l'entreprise (optionnel)" />
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-label [nzSpan]="6">Notes</nz-form-label>
+      <nz-form-control [nzSpan]="18">
+        <textarea nz-input formControlName="notes" placeholder="Notes supplémentaires (optionnel)" rows="3"></textarea>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+</nz-modal>
+
+<!-- Template pour le total -->
+<ng-template #totalTemplate let-total>
+  Total {{ total }} clients
+</ng-template> 

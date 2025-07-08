@@ -1,0 +1,153 @@
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <h1>Tableau de bord</h1>
+    <p>Vue d'ensemble de votre entreprise</p>
+  </div>
+
+  <!-- Statistiques principales -->
+  <div class="stats-section">
+    <nz-row [nzGutter]="16">
+      <nz-col [nzSpan]="6" [nzXs]="24" [nzSm]="12" [nzMd]="6">
+        <nz-card>
+          <nz-statistic
+            nzTitle="Chiffre d'affaires"
+            [nzValue]="125000"
+            nzPrefix="€"
+            [nzValueStyle]="{ color: '#3f8600' }">
+            <span nz-icon nzType="arrow-up" nzTheme="outline"></span>
+          </nz-statistic>
+        </nz-card>
+      </nz-col>
+      
+      <nz-col [nzSpan]="6" [nzXs]="24" [nzSm]="12" [nzMd]="6">
+        <nz-card>
+          <nz-statistic
+            nzTitle="Ventes du mois"
+            [nzValue]="156"
+            [nzValueStyle]="{ color: '#1890ff' }">
+            <span nz-icon nzType="shopping-cart" nzTheme="outline"></span>
+          </nz-statistic>
+        </nz-card>
+      </nz-col>
+      
+      <nz-col [nzSpan]="6" [nzXs]="24" [nzSm]="12" [nzMd]="6">
+        <nz-card>
+          <nz-statistic
+            nzTitle="Clients actifs"
+            [nzValue]="89"
+            [nzValueStyle]="{ color: '#722ed1' }">
+            <span nz-icon nzType="team" nzTheme="outline"></span>
+          </nz-statistic>
+        </nz-card>
+      </nz-col>
+      
+      <nz-col [nzSpan]="6" [nzXs]="24" [nzSm]="12" [nzMd]="6">
+        <nz-card>
+          <nz-statistic
+            nzTitle="Produits en stock"
+            [nzValue]="234"
+            [nzValueStyle]="{ color: '#fa8c16' }">
+            <span nz-icon nzType="inbox" nzTheme="outline"></span>
+          </nz-statistic>
+        </nz-card>
+      </nz-col>
+    </nz-row>
+  </div>
+
+  <!-- Contenu principal -->
+  <nz-row [nzGutter]="16" class="main-content">
+    <!-- Ventes récentes -->
+    <nz-col [nzSpan]="12" [nzXs]="24" [nzLg]="12">
+      <nz-card nzTitle="Ventes récentes" [nzExtra]="extraTemplate">
+        <nz-table #recentSalesTable [nzData]="recentSales" [nzPageSize]="5" [nzShowPagination]="false">
+          <thead>
+            <tr>
+              <th>Client</th>
+              <th>Produit</th>
+              <th>Montant</th>
+              <th>Statut</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let sale of recentSalesTable.data">
+              <td>{{ sale.client }}</td>
+              <td>{{ sale.product }}</td>
+              <td>{{ sale.amount }}€</td>
+              <td>
+                <nz-tag [nzColor]="getStatusColor(sale.status)">
+                  {{ sale.status === 'completed' ? 'Terminé' : 
+                     sale.status === 'pending' ? 'En cours' : 'Annulé' }}
+                </nz-tag>
+              </td>
+            </tr>
+          </tbody>
+        </nz-table>
+      </nz-card>
+    </nz-col>
+
+    <!-- Produits populaires -->
+    <nz-col [nzSpan]="12" [nzXs]="24" [nzLg]="12">
+      <nz-card nzTitle="Produits populaires">
+        <div *ngFor="let product of topProducts" class="product-item">
+          <div class="product-info">
+            <h4>{{ product.name }}</h4>
+            <p>{{ product.sales }} ventes - {{ product.revenue }}€</p>
+          </div>
+          <div class="product-stock">
+            <nz-progress 
+              [nzPercent]="(product.stock / 20) * 100" 
+              [nzShowInfo]="false"
+              [nzStrokeColor]="product.stock < 10 ? '#ff4d4f' : '#52c41a'">
+            </nz-progress>
+            <span class="stock-text">Stock: {{ product.stock }}</span>
+          </div>
+        </div>
+      </nz-card>
+    </nz-col>
+  </nz-row>
+
+  <!-- Alertes de stock -->
+  <nz-row [nzGutter]="16" class="alerts-section">
+    <nz-col [nzSpan]="24">
+      <nz-card nzTitle="Alertes de stock" [nzExtra]="alertsExtraTemplate">
+        <nz-table #stockAlertsTable [nzData]="stockAlerts" [nzShowPagination]="false">
+          <thead>
+            <tr>
+              <th>Produit</th>
+              <th>Stock actuel</th>
+              <th>Stock minimum</th>
+              <th>Statut</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let alert of stockAlertsTable.data">
+              <td>{{ alert.product }}</td>
+              <td>{{ alert.currentStock }}</td>
+              <td>{{ alert.minStock }}</td>
+              <td>
+                <nz-tag [nzColor]="getStockStatusColor(alert.status)">
+                  {{ alert.status === 'critical' ? 'Critique' : 'Faible' }}
+                </nz-tag>
+              </td>
+              <td>
+                <button nz-button nzType="primary" nzSize="small">
+                  Commander
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </nz-table>
+      </nz-card>
+    </nz-col>
+  </nz-row>
+</div>
+
+<!-- Templates pour les boutons extra -->
+<ng-template #extraTemplate>
+  <a routerLink="/sales">Voir tout</a>
+</ng-template>
+
+<ng-template #alertsExtraTemplate>
+  <a routerLink="/products">Gérer le stock</a>
+</ng-template> 

@@ -1,0 +1,170 @@
+.sales-container {
+  padding: 24px;
+}
+
+.sales-header {
+  margin-bottom: 24px;
+}
+
+.sales-header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #262626;
+  margin-bottom: 8px;
+}
+
+.sales-header p {
+  color: #8c8c8c;
+  font-size: 16px;
+  margin: 0;
+}
+
+.stats-section {
+  margin-bottom: 24px;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.stat-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  background: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: #1890ff;
+}
+
+.stat-icon.success {
+  background: #f6ffed;
+  color: #52c41a;
+}
+
+.stat-icon.primary {
+  background: #e6f7ff;
+  color: #1890ff;
+}
+
+.stat-icon.info {
+  background: #f0f9ff;
+  color: #13c2c2;
+}
+
+.stat-content {
+  flex: 1;
+}
+
+.stat-number {
+  font-size: 24px;
+  font-weight: 700;
+  color: #262626;
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 14px;
+  color: #8c8c8c;
+  margin-top: 4px;
+}
+
+.sales-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  gap: 16px;
+}
+
+.search-section {
+  flex: 1;
+  max-width: 300px;
+}
+
+.filter-section {
+  min-width: 150px;
+}
+
+.date-filter {
+  min-width: 200px;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.invoice-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.invoice-info strong {
+  color: #262626;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.invoice-info small {
+  color: #8c8c8c;
+  font-size: 12px;
+}
+
+.client-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.client-info strong {
+  color: #262626;
+  font-weight: 500;
+}
+
+.amount-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.total {
+  font-weight: 600;
+  color: #262626;
+  font-size: 14px;
+}
+
+.subtotal, .tax {
+  color: #8c8c8c;
+  font-size: 11px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .sales-container {
+    padding: 16px;
+  }
+  
+  .sales-header h1 {
+    font-size: 24px;
+  }
+  
+  .sales-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .search-section {
+    max-width: none;
+  }
+  
+  .filter-section, .date-filter {
+    min-width: auto;
+  }
+  
+  .action-buttons {
+    justify-content: center;
+  }
+} 

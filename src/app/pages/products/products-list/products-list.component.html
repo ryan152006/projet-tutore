@@ -1,0 +1,37 @@
+<div>
+  <button (click)="showForm = true; selectedProduct = null">Ajouter un produit</button>
+
+  <app-product-form *ngIf="showForm" [product]="selectedProduct" (ngSubmit)="onFormSubmit()" (close)="onFormClose()"></app-product-form>
+
+  <div *ngIf="loading">Chargement...</div>
+  <div *ngIf="error">{{ error }}</div>
+
+  <table *ngIf="!loading && products.length">
+    <thead>
+      <tr>
+        <th>Nom</th>
+        <th>Description</th>
+        <th>Catégorie</th>
+        <th>Prix</th>
+        <th>Quantité</th>
+        <th>Stock alerte</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let product of products">
+        <td>{{ product.nom }}</td>
+        <td>{{ product.description }}</td>
+        <td>{{ product.categorie }}</td>
+        <td>{{ product.prix }}</td>
+        <td>{{ product.quantity }}</td>
+        <td>{{ product.stock_alert_threshold }}</td>
+        <td>
+          <button (click)="editProduct(product)">Modifier</button>
+          <button (click)="deleteProduct(product.id)">Supprimer</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div *ngIf="!loading && !products.length">Aucun produit trouvé.</div>
+</div>
