@@ -9,12 +9,10 @@
       <label>Type de rapport</label>
       <nz-select [(ngModel)]="selectedReportType" nzSize="large">
         <nz-option nzValue="sales" nzLabel="Rapport des ventes"></nz-option>
-        <nz-option nzValue="products" nzLabel="Rapport des produits"></nz-option>
         <nz-option nzValue="clients" nzLabel="Rapport des clients"></nz-option>
         <nz-option nzValue="financial" nzLabel="Rapport financier"></nz-option>
       </nz-select>
     </div>
-
     <div class="control-group">
       <label>Période</label>
       <nz-select [(ngModel)]="selectedPeriod" nzSize="large">
@@ -25,12 +23,10 @@
         <nz-option nzValue="custom" nzLabel="Période personnalisée"></nz-option>
       </nz-select>
     </div>
-
     <div class="control-group" *ngIf="selectedPeriod === 'custom'">
       <label>Période personnalisée</label>
       <nz-range-picker [(ngModel)]="selectedDateRange" nzSize="large"></nz-range-picker>
     </div>
-
     <div class="action-buttons">
       <button nz-button nzType="primary" nzSize="large" (click)="generateReport()">
         <span nz-icon nzType="bar-chart"></span>
@@ -39,46 +35,43 @@
     </div>
   </div>
 
-  <!-- Statistiques générales -->
+  <!-- Statistiques générales dynamiques -->
   <div class="stats-section">
     <nz-row [nzGutter]="16">
       <nz-col [nzSpan]="6" [nzXs]="24" [nzSm]="12" [nzMd]="6">
         <nz-card>
           <nz-statistic
             nzTitle="Ventes totales"
-            [nzValue]="getTotalSales()"
+            [nzValue]="salesReport?.chiffre_affaires"
             [nzValueStyle]="{ color: '#3f8600' }"
             nzSuffix="€">
           </nz-statistic>
         </nz-card>
       </nz-col>
-      
       <nz-col [nzSpan]="6" [nzXs]="24" [nzSm]="12" [nzMd]="6">
         <nz-card>
           <nz-statistic
             nzTitle="Commandes"
-            [nzValue]="getTotalOrders()"
+            [nzValue]="salesReport?.total_ventes"
             [nzValueStyle]="{ color: '#1890ff' }">
           </nz-statistic>
         </nz-card>
       </nz-col>
-      
       <nz-col [nzSpan]="6" [nzXs]="24" [nzSm]="12" [nzMd]="6">
         <nz-card>
           <nz-statistic
             nzTitle="Panier moyen"
-            [nzValue]="getAverageOrderValue()"
+            [nzValue]="salesReport?.chiffre_affaires && salesReport?.total_ventes ? (salesReport.chiffre_affaires / salesReport.total_ventes) : 0"
             [nzValueStyle]="{ color: '#722ed1' }"
             nzSuffix="€">
           </nz-statistic>
         </nz-card>
       </nz-col>
-      
       <nz-col [nzSpan]="6" [nzXs]="24" [nzSm]="12" [nzMd]="6">
         <nz-card>
           <nz-statistic
             nzTitle="Croissance"
-            [nzValue]="getSalesGrowth()"
+            [nzValue]="0"
             [nzValueStyle]="{ color: '#52c41a' }"
             nzSuffix="%">
           </nz-statistic>
@@ -87,128 +80,62 @@
     </nz-row>
   </div>
 
-  <!-- Résumé financier -->
+  <!-- Résumé financier dynamique -->
   <div class="financial-summary">
     <nz-card nzTitle="Résumé financier">
       <nz-row [nzGutter]="16">
         <nz-col [nzSpan]="8" [nzXs]="24" [nzSm]="12" [nzMd]="8">
           <nz-statistic
             nzTitle="Chiffre d'affaires"
-            [nzValue]="financialData.totalRevenue"
+            [nzValue]="financeReport?.total_recettes"
             [nzValueStyle]="{ color: '#3f8600' }"
             nzSuffix="€">
           </nz-statistic>
         </nz-col>
-        
         <nz-col [nzSpan]="8" [nzXs]="24" [nzSm]="12" [nzMd]="8">
           <nz-statistic
             nzTitle="Dépenses"
-            [nzValue]="financialData.totalExpenses"
+            [nzValue]="financeReport?.total_depenses"
             [nzValueStyle]="{ color: '#cf1322' }"
             nzSuffix="€">
           </nz-statistic>
         </nz-col>
-        
         <nz-col [nzSpan]="8" [nzXs]="24" [nzSm]="12" [nzMd]="8">
           <nz-statistic
             nzTitle="Bénéfice net"
-            [nzValue]="financialData.netProfit"
+            [nzValue]="financeReport?.solde"
             [nzValueStyle]="{ color: '#52c41a' }"
             nzSuffix="€">
           </nz-statistic>
         </nz-col>
       </nz-row>
-      
       <div style="margin-top: 16px;">
         <nz-progress 
-          [nzPercent]="financialData.profitMargin" 
+          [nzPercent]="0" 
           nzStatus="active"
           nzStrokeColor="#52c41a">
         </nz-progress>
-        <p style="margin-top: 8px; color: #8c8c8c;">Marge bénéficiaire: {{ financialData.profitMargin }}%</p>
+        <p style="margin-top: 8px; color: #8c8c8c;">Marge bénéficiaire: 0%</p>
       </div>
     </nz-card>
   </div>
-
-  <!-- Onglets pour différents types de rapports -->
-  <nz-tabs>
-    <nz-tab nzTitle="Produits les plus vendus">
-      <nz-table [nzData]="topProducts" [nzShowPagination]="false">
-        <thead>
-          <tr>
-            <th>Produit</th>
-            <th>Ventes</th>
-            <th>Chiffre d'affaires</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let product of topProducts">
-            <td>{{ product.name }}</td>
-            <td>{{ product.sales }}</td>
-            <td>{{ product.revenue }}€</td>
-          </tr>
-        </tbody>
-      </nz-table>
-    </nz-tab>
-
-    <nz-tab nzTitle="Meilleurs clients">
-      <nz-table [nzData]="topClients" [nzShowPagination]="false">
-        <thead>
-          <tr>
-            <th>Client</th>
-            <th>Commandes</th>
-            <th>Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let client of topClients">
-            <td>{{ client.name }}</td>
-            <td>{{ client.orders }}</td>
-            <td>{{ client.total }}€</td>
-          </tr>
-        </tbody>
-      </nz-table>
-    </nz-tab>
-
-    <nz-tab nzTitle="Évolution des ventes">
-      <nz-table [nzData]="salesData" [nzShowPagination]="false">
-        <thead>
-          <tr>
-            <th>Mois</th>
-            <th>Ventes</th>
-            <th>Commandes</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let data of salesData">
-            <td>{{ data.month }}</td>
-            <td>{{ data.sales }}€</td>
-            <td>{{ data.orders }}</td>
-          </tr>
-        </tbody>
-      </nz-table>
-    </nz-tab>
-  </nz-tabs>
 
   <!-- Actions d'export -->
   <div class="export-actions">
     <h3>Exporter le rapport</h3>
     <p>Choisissez le format d'export pour votre rapport</p>
-    
     <div class="action-buttons">
       <button nz-button nzType="default" nzSize="large" (click)="exportReport('pdf')">
         <span nz-icon nzType="file-pdf"></span>
-        Export PDF
+        PDF
       </button>
-      
       <button nz-button nzType="default" nzSize="large" (click)="exportReport('excel')">
         <span nz-icon nzType="file-excel"></span>
-        Export Excel
+        Excel
       </button>
-      
       <button nz-button nzType="default" nzSize="large" (click)="exportReport('csv')">
         <span nz-icon nzType="file-text"></span>
-        Export CSV
+        CSV
       </button>
     </div>
   </div>

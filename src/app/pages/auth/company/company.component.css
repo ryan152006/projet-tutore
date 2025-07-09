@@ -1,0 +1,70 @@
+.company-page-bg {
+  min-height: 100vh;
+  width: 100vw;
+  background: #292d56;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.company-center-wrapper {
+  width: 100vw;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.company-card {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 8px 32px rgba(41,45,86,0.18);
+  padding: 40px 32px 32px 32px;
+  max-width: 420px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: fadeInUp 0.4s;
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.company-logo-block {
+  text-align: center;
+  margin-bottom: 24px;
+}
+.company-logo {
+  height: 70px;
+  width: 70px;
+  border-radius: 50%;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 8px rgba(41,45,86,0.10);
+  background: #292d56;
+  padding: 8px;
+}
+.company-card h2 {
+  font-size: 26px;
+  font-weight: 700;
+  color: #292d56;
+  margin-bottom: 8px;
+}
+.company-card p {
+  color: #888;
+  margin-bottom: 24px;
+}
+.company-form {
+  width: 100%;
+}
+button[nz-button] {
+  margin-top: 16px;
+}
+@media (max-width: 600px) {
+  .company-card {
+    padding: 24px 8px;
+    max-width: 98vw;
+  }
+  .company-logo {
+    height: 50px;
+    width: 50px;
+  }
+} 

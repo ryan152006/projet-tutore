@@ -1,11 +1,12 @@
 import { CanActivateFn, Router } from '@angular/router';
+import { inject } from '@angular/core';
 
 export const authGuard: CanActivateFn = (route, state) => {
   const token = localStorage.getItem('token');
+  const router = inject(Router);
   if (token) {
     return true;
   }
-  // Redirige vers la page de connexion si non authentifié
-  window.location.href = '/auth/login';
+  router.navigate(['/auth/login']);
   return false;
 }; 

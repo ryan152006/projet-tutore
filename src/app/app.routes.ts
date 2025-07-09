@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
+  { path: '', redirectTo: 'auth/login', pathMatch: 'full' },
   {
     path: 'auth',
     loadChildren: () => import('./pages/auth/auth.routes').then(m => m.AUTH_ROUTES)
@@ -47,9 +48,8 @@ export const routes: Routes = [
         loadChildren: () => import('./pages/settings/settings.routes').then(m => m.SETTINGS_ROUTES)
       },
       {
-        path: '',
-        redirectTo: 'dashboard',
-        pathMatch: 'full'
+        path: 'notifications',
+        loadComponent: () => import('./pages/notifications/notifications.component').then(m => m.NotificationsComponent)
       }
     ]
   },

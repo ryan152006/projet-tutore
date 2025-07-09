@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NzFormModule } from 'ng-zorro-antd/form';
@@ -34,7 +34,7 @@ import { CompanyService } from '../../../services/company.service';
   ],
   standalone: true
 })
-export class RegisterComponent {
+export class RegisterComponent implements OnInit {
   registerForm: FormGroup;
   isLoading = false;
 
@@ -61,6 +61,13 @@ export class RegisterComponent {
     }, { validators: this.passwordMatchValidator });
   }
 
+  ngOnInit(): void {
+    // Initialisation des validators après la création du formulaire
+    Object.values(this.registerForm.controls).forEach(control => {
+      control.updateValueAndValidity();
+    });
+  }
+
   passwordMatchValidator(form: FormGroup) {
     const password = form.get('password');
     const confirmPassword = form.get('confirmPassword');
@@ -68,58 +75,19 @@ export class RegisterComponent {
       ? null : { passwordMismatch: true };
   }
 
-  submitForm(): void {
+  onSubmit(): void {
     if (this.registerForm.valid) {
-      this.isLoading = true;
-      // Création de l'utilisateur via l'API
-      this.authService.register({
-        first_name: this.registerForm.value.firstName,
-        last_name: this.registerForm.value.lastName,
-        email: this.registerForm.value.email,
-        phone: this.registerForm.value.phone,
-        password: this.registerForm.value.password,
-        role: this.registerForm.value.role
-      }).subscribe({
+      const formData = this.registerForm.value;
+      // Ajout du rôle Admin par défaut
+      formData.role = 'admin';
+      this.authService.register(formData).subscribe({
         next: (res) => {
-          if (res.token) {
-            localStorage.setItem('token', res.token);
-            localStorage.setItem('user', JSON.stringify(res.user));
-            // Création de l'entreprise via l'API
-            this.companyService.createCompany({
-              nom: this.registerForm.value.companyName,
-              adresse: this.registerForm.value.companyAddress,
-              numtel: this.registerForm.value.companyPhone,
-              numImmatriculation: this.registerForm.value.companySiret,
-              email: this.registerForm.value.email
-            }).subscribe({
-              next: (companyRes) => {
-                // Mise à jour du user localStorage avec l'entreprise
-                const user = JSON.parse(localStorage.getItem('user') || '{}');
-                user.company = companyRes;
-                localStorage.setItem('user', JSON.stringify(user));
-                this.isLoading = false;
-                this.message.success('Compte et entreprise créés avec succès !');
-                this.router.navigate(['/dashboard']);
-              },
-              error: (err) => {
-                this.isLoading = false;
-                this.message.error('Erreur lors de la création de l\'entreprise.');
-              }
-            });
-          } else {
-            this.isLoading = false;
-            this.message.error('Erreur lors de l\'inscription.');
-          }
+          localStorage.setItem('token', res.token);
+          localStorage.setItem('user', JSON.stringify(res.user));
+          this.router.navigate(['/dashboard']);
         },
-        error: (err) => {
-          this.isLoading = false;
-          this.message.error('Erreur lors de l\'inscription.');
-        }
-      });
-    } else {
-      Object.values(this.registerForm.controls).forEach(control => {
-        if (control.invalid) {
-          control.markAsTouched();
+        error: () => {
+          // Affiche une erreur (à personnaliser)
         }
       });
     }

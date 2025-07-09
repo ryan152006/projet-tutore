@@ -4,6 +4,10 @@
     <p>Configurez votre application et vos préférences</p>
   </div>
 
+  <ng-container *ngIf="companyForm">
+    <nz-alert *ngIf="!companyForm.value.name" nzType="info" nzMessage="Aucune entreprise enregistrée. Veuillez remplir le formulaire pour créer votre entreprise." nzShowIcon style="margin-bottom: 16px;"></nz-alert>
+  </ng-container>
+
   <nz-tabs>
     <!-- Paramètres de l'entreprise -->
     <nz-tab nzTitle="Entreprise">

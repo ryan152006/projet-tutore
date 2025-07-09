@@ -9,6 +9,7 @@ import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzProgressModule } from 'ng-zorro-antd/progress';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzButtonModule } from 'ng-zorro-antd/button';
+import { ReportService } from '../../services/report.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -29,37 +30,30 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
   standalone: true
 })
 export class DashboardComponent implements OnInit {
+  chiffreAffaires: number = 0;
+  ventesMois: number = 0;
+  clientsActifs: number = 0;
+  produitsEnStock: number = 0;
   recentSales: any[] = [];
   topProducts: any[] = [];
   stockAlerts: any[] = [];
 
-  constructor() {}
+  constructor(private reportService: ReportService) {}
 
   ngOnInit(): void {
     this.loadDashboardData();
   }
 
   loadDashboardData(): void {
-    // Données simulées pour le tableau de bord
-    this.recentSales = [
-      { id: 1, client: 'Jean Dupont', product: 'Ordinateur portable', amount: 1200, date: '2024-01-15', status: 'completed' },
-      { id: 2, client: 'Marie Martin', product: 'Souris sans fil', amount: 45, date: '2024-01-14', status: 'pending' },
-      { id: 3, client: 'Pierre Durand', product: 'Clavier mécanique', amount: 89, date: '2024-01-13', status: 'completed' },
-      { id: 4, client: 'Sophie Bernard', product: 'Écran 24"', amount: 299, date: '2024-01-12', status: 'cancelled' }
-    ];
-
-    this.topProducts = [
-      { name: 'Ordinateur portable', sales: 45, revenue: 54000, stock: 12 },
-      { name: 'Souris sans fil', sales: 120, revenue: 5400, stock: 8 },
-      { name: 'Clavier mécanique', sales: 67, revenue: 5963, stock: 15 },
-      { name: 'Écran 24"', sales: 23, revenue: 6877, stock: 5 }
-    ];
-
-    this.stockAlerts = [
-      { product: 'Souris sans fil', currentStock: 8, minStock: 10, status: 'low' },
-      { product: 'Écran 24"', currentStock: 5, minStock: 8, status: 'critical' },
-      { product: 'Câbles HDMI', currentStock: 3, minStock: 15, status: 'critical' }
-    ];
+    this.reportService.getDashboardReport().subscribe((data) => {
+      this.chiffreAffaires = data.chiffre_affaires || 0;
+      this.ventesMois = data.ventes_mois || 0;
+      this.clientsActifs = data.clients_actifs || 0;
+      this.produitsEnStock = data.produits_en_stock || 0;
+      this.recentSales = data.recent_sales || [];
+      this.topProducts = data.top_products || [];
+      this.stockAlerts = data.stock_alerts || [];
+    });
   }
 
   getStatusColor(status: string): string {

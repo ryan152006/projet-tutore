@@ -17,6 +17,7 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { NzStatisticModule } from 'ng-zorro-antd/statistic';
 import { NzProgressModule } from 'ng-zorro-antd/progress';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { TransactionService } from '../../services/transaction.service';
 
 @Component({
   selector: 'app-finance',
@@ -57,7 +58,8 @@ export class FinanceComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private message: NzMessageService
+    private message: NzMessageService,
+    private transactionService: TransactionService
   ) {
     this.transactionForm = this.fb.group({
       type: [null, [Validators.required]], // 'income' ou 'expense'
@@ -75,58 +77,14 @@ export class FinanceComponent implements OnInit {
   }
 
   loadTransactions(): void {
-    this.transactions = [
-      {
-        id: 1,
-        type: 'income',
-        category: 'Ventes',
-        amount: 1078.8,
-        description: 'Facture FACT-2024-001',
-        date: new Date('2024-01-15'),
-        reference: 'FACT-2024-001',
-        notes: 'Vente ordinateur portable'
+    this.transactionService.getAllTransactions().subscribe({
+      next: (data) => {
+        this.transactions = data;
       },
-      {
-        id: 2,
-        type: 'expense',
-        category: 'Achats',
-        amount: 650,
-        description: 'Achat stock ordinateurs',
-        date: new Date('2024-01-14'),
-        reference: 'ACH-2024-001',
-        notes: 'Commande fournisseur Dell'
-      },
-      {
-        id: 3,
-        type: 'expense',
-        category: 'Salaires',
-        amount: 2500,
-        description: 'Salaire employé',
-        date: new Date('2024-01-05'),
-        reference: 'SAL-2024-001',
-        notes: 'Salaire mensuel'
-      },
-      {
-        id: 4,
-        type: 'expense',
-        category: 'Loyer',
-        amount: 1200,
-        description: 'Loyer bureau',
-        date: new Date('2024-01-01'),
-        reference: 'LOY-2024-001',
-        notes: 'Loyer mensuel'
-      },
-      {
-        id: 5,
-        type: 'income',
-        category: 'Ventes',
-        amount: 102,
-        description: 'Facture FACT-2024-002',
-        date: new Date('2024-01-14'),
-        reference: 'FACT-2024-002',
-        notes: 'Vente accessoires'
+      error: () => {
+        this.message.error('Erreur lors du chargement des transactions');
       }
-    ];
+    });
   }
 
   showModal(transaction?: any): void {
@@ -145,20 +103,23 @@ export class FinanceComponent implements OnInit {
   handleOk(): void {
     if (this.transactionForm.valid) {
       const formData = this.transactionForm.value;
-      
-      if (this.isEditMode) {
-        const index = this.transactions.findIndex(t => t.id === this.currentTransaction.id);
-        this.transactions[index] = { ...this.currentTransaction, ...formData };
-        this.message.success('Transaction mise à jour avec succès !');
+      if (this.isEditMode && this.currentTransaction) {
+        this.transactionService.updateTransaction(this.currentTransaction.id, formData).subscribe({
+          next: () => {
+            this.message.success('Transaction mise à jour avec succès !');
+            this.loadTransactions();
+          },
+          error: () => this.message.error('Erreur lors de la mise à jour')
+        });
       } else {
-        const newTransaction = {
-          id: this.transactions.length + 1,
-          ...formData
-        };
-        this.transactions.push(newTransaction);
-        this.message.success('Transaction ajoutée avec succès !');
+        this.transactionService.createTransaction(formData).subscribe({
+          next: () => {
+            this.message.success('Transaction ajoutée avec succès !');
+            this.loadTransactions();
+          },
+          error: () => this.message.error('Erreur lors de l\'ajout')
+        });
       }
-      
       this.isModalVisible = false;
       this.transactionForm.reset();
     } else {
@@ -176,9 +137,13 @@ export class FinanceComponent implements OnInit {
   }
 
   deleteTransaction(transaction: any): void {
-    const index = this.transactions.findIndex(t => t.id === transaction.id);
-    this.transactions.splice(index, 1);
-    this.message.success('Transaction supprimée avec succès !');
+    this.transactionService.deleteTransaction(transaction.id).subscribe({
+      next: () => {
+        this.message.success('Transaction supprimée avec succès !');
+        this.loadTransactions();
+      },
+      error: () => this.message.error('Erreur lors de la suppression')
+    });
   }
 
   getTypeColor(type: string): string {

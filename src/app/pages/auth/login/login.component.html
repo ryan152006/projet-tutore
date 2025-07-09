@@ -1,20 +1,17 @@
-<div class="login-container">
-  <div class="login-background">
+<div class="login-page-layout">
+  <div class="login-left">
     <div class="login-card">
-      <div class="login-logo" style="text-align:center; margin-bottom: 16px;">
-        <img src="/assets/logo.png" alt="Logo Gestion Pro" style="height:60px; width:auto;" />
-      </div>
+      
       <div class="login-header">
-        <h1>Gestion Pro</h1>
+        <h1>Se connecter sur DataFlow</h1>
         <p>Connectez-vous à votre compte</p>
       </div>
-
-      <form nz-form [formGroup]="loginForm" (ngSubmit)="submitForm()" class="login-form">
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
         <nz-form-item>
           <nz-form-label [nzSpan]="24" nzRequired>Email</nz-form-label>
           <nz-form-control nzErrorTip="Veuillez saisir un email valide">
             <nz-input-group nzPrefixIcon="mail">
-              <input type="email" nz-input formControlName="email" placeholder="Votre email" />
+              <input type="email" nz-input formControlName="email" placeholder="Votre email" style="padding: 5px;"/>
             </nz-input-group>
           </nz-form-control>
         </nz-form-item>
@@ -23,7 +20,7 @@
           <nz-form-label [nzSpan]="24" nzRequired>Mot de passe</nz-form-label>
           <nz-form-control nzErrorTip="Le mot de passe doit contenir au moins 6 caractères">
             <nz-input-group nzPrefixIcon="lock">
-              <input type="password" nz-input formControlName="password" placeholder="Votre mot de passe" />
+              <input type="password" nz-input formControlName="password" placeholder="Votre mot de passe" style="padding: 5px;"/>
             </nz-input-group>
           </nz-form-control>
         </nz-form-item>
@@ -37,31 +34,19 @@
           </a>
         </div>
 
-        <button nz-button nzType="primary" nzBlock [nzLoading]="isLoading" type="submit">
+        <button nz-button nzType="primary" nzBlock [nzLoading]="isLoading" type="submit" style="font-size: 18px; padding-bottom: 10px;">
           Se connecter
         </button>
       </form>
-
-      <nz-divider nzText="ou">ou</nz-divider>
-
-      <div class="social-login">
-        <button nz-button nzBlock nzSize="large" class="google-btn" (click)="loginWithGoogle()">
-          <span nz-icon nzType="google" nzTheme="outline"></span>
-          Continuer avec Google
-        </button>
-        
-        <button nz-button nzBlock nzSize="large" class="facebook-btn" (click)="loginWithFacebook()">
-          <span nz-icon nzType="facebook" nzTheme="outline"></span>
-          Continuer avec Facebook
-        </button>
-      </div>
-
-      <div class="register-link">
-        <p>
-          Pas encore de compte ? 
-          <a routerLink="/auth/register">Créer un compte</a>
-        </p>
-      </div>
+     
+    </div>
+  </div>
+  <div class="login-right">
+    <div class="login-info-card">
+      <img src="/logo.png" alt="Logo DataFlow" style="height:100px; width:auto; display:block; margin:0 auto 16px auto; border-radius: 50%;" />
+      <h2>Bienvenue sur DataFlow</h2>
+      <p>DataFlow est une solution ERP moderne pour la gestion complète de votre entreprise : ventes, achats, RH, finances, rapports, et bien plus. Centralisez vos opérations, gagnez en productivité et pilotez votre activité en toute simplicité.</p>
+      <a routerLink="/auth/company" class="company-link">Créer une entreprise et démarrer</a>
     </div>
   </div>
 </div> 

@@ -2,14 +2,14 @@
   <div class="register-background">
     <div class="register-card">
       <div class="register-logo" style="text-align:center; margin-bottom: 16px;">
-        <img src="/assets/logo.png" alt="Logo Gestion Pro" style="height:60px; width:auto;" />
+        <img src="/logo.png" alt="Logo DataFlow" style="height:60px; width:auto; border-radius: 50%;" />
       </div>
       <div class="register-header">
         <h1>Créer un compte</h1>
-        <p>Rejoignez Gestion Pro pour optimiser votre entreprise</p>
+        <p>Rejoignez DataFlow pour optimiser votre entreprise</p>
       </div>
 
-      <form nz-form [formGroup]="registerForm" (ngSubmit)="submitForm()" class="register-form">
+      <form nz-form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
         <div class="form-row">
           <nz-form-item>
             <nz-form-label [nzSpan]="24" nzRequired>Prénom</nz-form-label>

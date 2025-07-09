@@ -1,1 +1,159 @@
+:root {
+  --primary-color: #292d56; /* Bleu du fond du logo */
+  --accent-color: #b01222;  /* Rouge de la flèche */
+  --button-text: #fff;
+}
 
+button[nz-button], .ant-btn, .btn-primary {
+  background: var(--primary-color) !important;
+  color: var(--button-text) !important;
+  border: none !important;
+  border-radius: 6px !important;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(41,45,86,0.08);
+  transition: background 0.2s, color 0.2s;
+}
+button[nz-button]:hover, .ant-btn:hover, .btn-primary:hover {
+  background: var(--accent-color) !important;
+  color: var(--button-text) !important;
+}
+
+button[nz-button][nzType="default"], .ant-btn-default {
+  background: #fff !important;
+  color: var(--primary-color) !important;
+  border: 1.5px solid var(--primary-color) !important;
+}
+button[nz-button][nzType="default"]:hover, .ant-btn-default:hover {
+  background: var(--primary-color) !important;
+  color: #fff !important;
+}
+
+/* --- Design page création entreprise --- */
+.company-page-bg {
+  min-height: 100vh;
+  width: 100vw;
+  background: #292d56;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.company-center-wrapper {
+  width: 100vw;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.company-card {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 8px 32px rgba(41,45,86,0.18);
+  padding: 40px 32px 32px 32px;
+  max-width: 420px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: fadeInUp 0.4s;
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.company-logo-block {
+  text-align: center;
+  margin-bottom: 24px;
+}
+.company-logo {
+  height: 70px;
+  width: 70px;
+  border-radius: 50%;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 8px rgba(41,45,86,0.10);
+  background: #292d56;
+  padding: 8px;
+}
+.company-logo-block p {
+  margin-bottom: 12px;
+}
+.company-card h2 {
+  font-size: 26px;
+  font-weight: 700;
+  color: #292d56;
+  margin-bottom: 8px;
+}
+.company-card p {
+  color: #888;
+  margin-bottom: 24px;
+}
+.company-form {
+  width: 100%;
+  margin-top: 0;
+}
+button[nz-button] {
+  margin-top: 16px;
+}
+.company-form button[nz-button] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 44px;
+  line-height: 1.2;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+@media (max-width: 600px) {
+  .company-card {
+    padding: 24px 8px;
+    max-width: 98vw;
+  }
+  .company-logo {
+    height: 50px;
+    width: 50px;
+  }
+}
+/* --- Fin design création entreprise --- */
+
+/* --- Style spécifique formulaire entreprise --- */
+.company-page-bg {
+  background: none !important;
+}
+.company-card {
+  width: 650px;
+  max-width: 99vw;
+  border-radius: 0 !important;
+}
+.company-form input[nz-input],
+.company-form button[nz-button] {
+  padding: 10px !important;
+  border-radius: 0 !important;
+}
+.company-form input[nz-input] {
+  width: 100%;
+}
+.company-form button[nz-button] {
+  width: 100%;
+  margin-top: 18px;
+}
+@media (max-width: 700px) {
+  .company-card {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+.form-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 0;
+}
+.form-col {
+  flex: 1 1 0;
+  min-width: 0;
+}
+@media (max-width: 700px) {
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+}

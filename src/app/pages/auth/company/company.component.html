@@ -1,0 +1,56 @@
+<div class="company-page-bg">
+  <div class="company-center-wrapper">
+    <div class="company-card">
+      <div class="company-logo-block">
+        <img src="/logo.png" alt="Logo DataFlow" class="company-logo" width="100px" height="100px"/>
+        <h2>Créer une entreprise</h2>
+        <p>Merci de renseigner les informations de votre société pour démarrer avec DataFlow.</p>
+      </div>
+      <form [formGroup]="companyForm" (ngSubmit)="onSubmit()" class="company-form">
+        <div class="form-row">
+          <nz-form-item class="form-col">
+            <nz-form-label [nzSpan]="24" nzRequired>Nom de l'entreprise</nz-form-label>
+            <nz-form-control>
+              <input nz-input formControlName="nom" placeholder="Nom de l'entreprise" />
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item class="form-col">
+            <nz-form-label [nzSpan]="24">Adresse</nz-form-label>
+            <nz-form-control>
+              <input nz-input formControlName="adresse" placeholder="Adresse de l'entreprise" />
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <div class="form-row">
+          <nz-form-item class="form-col">
+            <nz-form-label [nzSpan]="24">Téléphone</nz-form-label>
+            <nz-form-control>
+              <input nz-input formControlName="numtel" placeholder="Téléphone de l'entreprise" />
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item class="form-col">
+            <nz-form-label [nzSpan]="24">Email</nz-form-label>
+            <nz-form-control>
+              <input nz-input formControlName="email" placeholder="Email de l'entreprise" />
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <div class="form-row">
+          <nz-form-item class="form-col">
+            <nz-form-label [nzSpan]="24">Raison sociale</nz-form-label>
+            <nz-form-control>
+              <input nz-input formControlName="raisonsociale" placeholder="Raison sociale (ex : SARL, SAS, etc.)" />
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item class="form-col">
+            <nz-form-label [nzSpan]="24">N° d'immatriculation</nz-form-label>
+            <nz-form-control>
+              <input nz-input formControlName="numImmatriculation" placeholder="Numéro d'immatriculation (SIRET, etc.)" />
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <button nz-button nzType="primary" nzBlock type="submit">Valider et continuer</button>
+      </form>
+    </div>
+  </div>
+</div> 

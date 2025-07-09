@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NzFormModule } from 'ng-zorro-antd/form';
@@ -31,60 +31,49 @@ import { AuthService } from '../../../services/auth.service';
   ],
   standalone: true
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   isLoading = false;
 
   constructor(
     private fb: FormBuilder,
-    private router: Router,
-    private message: NzMessageService,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) {
     this.loginForm = this.fb.group({
-      email: [null, [Validators.required, Validators.email]],
-      password: [null, [Validators.required, Validators.minLength(6)]],
-      remember: [true]
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required]]
     });
   }
 
-  submitForm(): void {
+  ngOnInit(): void {
+    const token = localStorage.getItem('token');
+    if (token && token.length > 10) { // On considère qu'un token valide a une certaine longueur
+      this.router.navigate(['/dashboard']);
+    }
+  }
+
+  onSubmit(): void {
     if (this.loginForm.valid) {
-      this.isLoading = true;
-      this.authService.login({
-        email: this.loginForm.value.email,
-        password: this.loginForm.value.password
-      }).subscribe({
+      const { email, password } = this.loginForm.value;
+      this.authService.login({ email, password }).subscribe({
         next: (res) => {
-          this.isLoading = false;
-          if (res.token) {
-            localStorage.setItem('token', res.token);
-            localStorage.setItem('user', JSON.stringify(res.user));
-            this.message.success('Connexion réussie !');
-            this.router.navigate(['/dashboard']);
-          } else {
-            this.message.error('Erreur lors de la connexion.');
-          }
+          localStorage.setItem('token', res.token);
+          localStorage.setItem('user', JSON.stringify(res.user));
+        this.router.navigate(['/dashboard']);
         },
-        error: (err) => {
-          this.isLoading = false;
-          this.message.error('Email ou mot de passe incorrect.');
-        }
-      });
-    } else {
-      Object.values(this.loginForm.controls).forEach(control => {
-        if (control.invalid) {
-          control.markAsTouched();
+        error: () => {
+          // Affiche une erreur (à personnaliser)
         }
       });
     }
   }
 
   loginWithGoogle(): void {
-    this.message.info('Connexion avec Google en cours...');
+    // this.message.info('Connexion avec Google en cours...'); // Removed as per edit hint
   }
 
   loginWithFacebook(): void {
-    this.message.info('Connexion avec Facebook en cours...');
+    // this.message.info('Connexion avec Facebook en cours...'); // Removed as per edit hint
   }
 } 

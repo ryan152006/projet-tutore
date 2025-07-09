@@ -16,6 +16,7 @@ import { NzUploadModule } from 'ng-zorro-antd/upload';
 import { NzGridModule } from 'ng-zorro-antd/grid';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { CompanyService } from '../../services/company.service';
 
 @Component({
   selector: 'app-settings',
@@ -68,7 +69,8 @@ export class SettingsComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private message: NzMessageService,
-    private router: Router
+    private router: Router,
+    private companyService: CompanyService
   ) {
     this.initializeForms();
   }
@@ -126,56 +128,44 @@ export class SettingsComponent implements OnInit {
   }
 
   loadSettings(): void {
-    // Charger les paramètres depuis le stockage local ou l'API
-    const companySettings = {
-      name: 'Mon Entreprise SARL',
-      address: '123 Rue de la Paix, 75001 Paris',
-      phone: '0123456789',
-      email: 'contact@monentreprise.fr',
-      website: 'www.monentreprise.fr',
-      siret: '12345678901234',
-      tvaNumber: 'FR12345678901'
-    };
-
-    const invoiceSettings = {
-      prefix: 'FACT',
-      nextNumber: 1,
-      currency: 'EUR',
-      taxRate: 20,
-      paymentTerms: 30,
-      footer: 'Merci de votre confiance',
-      logo: true
-    };
-
-    const notificationSettings = {
-      emailNotifications: true,
-      lowStockAlerts: true,
-      newOrderAlerts: true,
-      paymentReminders: true,
-      reportSchedule: 'weekly',
-      language: 'fr',
-      timezone: 'Europe/Paris'
-    };
-
-    const securitySettings = {
-      twoFactorAuth: false,
-      sessionTimeout: 30,
-      passwordExpiry: 90,
-      loginAttempts: 3,
-      backupFrequency: 'daily'
-    };
-
-    this.companyForm.patchValue(companySettings);
-    this.invoiceForm.patchValue(invoiceSettings);
-    this.notificationForm.patchValue(notificationSettings);
-    this.securityForm.patchValue(securitySettings);
+    this.companyService.getCompanies().subscribe({
+      next: (data) => {
+        if (data && data.length > 0) {
+          const company = data[0];
+          this.companyForm.patchValue({
+            name: company.nom,
+            address: company.adresse,
+            phone: company.numtel,
+            email: company.email,
+            website: company.raisonsociale,
+            siret: company.numImmatriculation,
+            tvaNumber: ''
+          });
+        }
+      },
+      error: () => {
+        this.message.error('Erreur lors du chargement des infos entreprise');
+      }
+    });
   }
 
   saveCompanySettings(): void {
     if (this.companyForm.valid) {
-      // Sauvegarder les paramètres de l'entreprise
-      console.log('Paramètres entreprise:', this.companyForm.value);
-      this.message.success('Paramètres de l\'entreprise sauvegardés !');
+      this.companyService.createCompany({
+        nom: this.companyForm.value.name,
+        adresse: this.companyForm.value.address,
+        numtel: this.companyForm.value.phone,
+        email: this.companyForm.value.email,
+        raisonsociale: this.companyForm.value.website,
+        numImmatriculation: this.companyForm.value.siret
+      }).subscribe({
+        next: () => {
+          this.message.success('Paramètres de l\'entreprise sauvegardés !');
+        },
+        error: () => {
+          this.message.error('Erreur lors de la sauvegarde des paramètres');
+        }
+      });
     } else {
       this.message.error('Veuillez corriger les erreurs dans le formulaire');
     }

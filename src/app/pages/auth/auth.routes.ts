@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { CompanyComponent } from './company/company.component';
 
 export const AUTH_ROUTES: Routes = [
   {
@@ -20,5 +21,9 @@ export const AUTH_ROUTES: Routes = [
   {
     path: 'forgot-password',
     component: ForgotPasswordComponent
+  },
+  {
+    path: 'company',
+    component: CompanyComponent
   }
 ]; 

@@ -1,3 +1,82 @@
+.login-page-layout {
+  display: flex;
+  min-height: 100vh;
+  background: #f5f7fa;
+  width: 100vw;
+  max-width: 100vw;
+}
+.login-left, .login-right {
+  flex: 1 1 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+}
+.login-left {
+  background: #fff;
+  min-width: 0;
+}
+.login-right {
+  background: #292d56;
+  color: #fff;
+  flex-direction: column;
+  min-width: 0;
+}
+.login-info-card {
+justify-content: center;
+align-items: center;
+display: flex;
+flex-direction: column;
+  width: 100%;
+  height: 100%; 
+  padding: 48px 32px;
+  background: rgba(255,255,255,0.04);
+  border-radius: 16px;
+  box-shadow: 0 4px 32px rgba(41,45,86,0.10);
+  text-align: center;
+}
+.login-info-card h2 {
+  margin-bottom: 16px;
+  font-size: 30px;
+  font-weight: 700;
+  color: #fff;
+}
+.login-info-card p {
+  font-size: 20px;
+  color: #e0e3ef;
+  margin-bottom: 24px;
+}
+.company-link {
+  display: inline-block;
+  background: #fff;
+  color: #292d56;
+  font-weight: 600;
+  padding: 10px 24px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s;
+  box-shadow: 0 2px 8px rgba(41,45,86,0.08);
+}
+.company-link:hover {
+  background: #b01222;
+  color: #fff;
+}
+@media (max-width: 900px) {
+  .login-page-layout {
+    flex-direction: column;
+    width: 100vw;
+    max-width: 100vw;
+  }
+  .login-left, .login-right {
+    flex: none;
+    width: 100%;
+    min-height: 50vh;
+  }
+  .login-info-card {
+    margin: 32px 0;
+  }
+}
+
 .login-container {
   min-height: 100vh;
   display: flex;
@@ -15,7 +94,7 @@
 .login-card {
   background: white;
   width: 100%;
-  box-shadow: 0 0ch 1px #000000;
+  
   padding: 40px;
   backdrop-filter: blur(10px);
 }
@@ -26,8 +105,8 @@
 }
 
 .login-header h1 {
-  color: #1890ff;
-  font-size: 28px;
+  color: #292d56;
+  font-size: 30px;
   font-weight: 700;
   margin-bottom: 8px;
 }

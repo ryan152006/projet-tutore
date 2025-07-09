@@ -113,7 +113,7 @@ export class EmployeesComponent implements OnInit {
       if (this.isEditMode && this.currentEmployee) {
         this.employeeService.updateEmployee(this.currentEmployee.id, formData).subscribe({
           next: () => {
-            this.message.success('Employé mis à jour avec succès !');
+        this.message.success('Employé mis à jour avec succès !');
             this.loadEmployees();
           },
           error: () => this.message.error('Erreur lors de la mise à jour')
@@ -121,7 +121,7 @@ export class EmployeesComponent implements OnInit {
       } else {
         this.employeeService.createEmployee(formData).subscribe({
           next: () => {
-            this.message.success('Employé ajouté avec succès !');
+        this.message.success('Employé ajouté avec succès !');
             this.loadEmployees();
           },
           error: () => this.message.error('Erreur lors de l\'ajout')
@@ -146,11 +146,15 @@ export class EmployeesComponent implements OnInit {
   deleteEmployee(employee: any): void {
     this.employeeService.deleteEmployee(employee.id).subscribe({
       next: () => {
-        this.message.success('Employé supprimé avec succès !');
+    this.message.success('Employé supprimé avec succès !');
         this.loadEmployees();
       },
       error: () => this.message.error('Erreur lors de la suppression')
     });
+  }
+
+  generatePayslip(employee: any): void {
+    this.message.success(`Bulletin de paie généré pour ${this.getFullName(employee)} !`);
   }
 
   getStatusColor(status: string): string {
@@ -160,4 +164,18 @@ export class EmployeesComponent implements OnInit {
   getFullName(employee: any): string {
     return `${employee.firstName} ${employee.lastName}`;
   }
-}
+
+  getFilteredEmployees(): any[] {
+    if (!this.searchValue) {
+      return this.employees;
+    }
+    const search = this.searchValue.toLowerCase();
+    return this.employees.filter(emp =>
+      this.getFullName(emp).toLowerCase().includes(search) ||
+      (emp.email && emp.email.toLowerCase().includes(search)) ||
+      (emp.phone && emp.phone.toLowerCase().includes(search)) ||
+      (emp.department && emp.department.toLowerCase().includes(search)) ||
+      (emp.position && emp.position.toLowerCase().includes(search))
+    );
+  }
+} 

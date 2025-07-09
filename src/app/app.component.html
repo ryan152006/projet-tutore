@@ -1,120 +1,144 @@
-<nz-layout class="app-layout">
-  <nz-sider class="menu-sidebar"
-    nzCollapsible
-    nzWidth="256px"
-    nzBreakpoint="md"
-    [(nzCollapsed)]="isCollapsed"
-    [nzTrigger]="null"
-  >
-    <div class="sidebar-logo">
-      <a routerLink="/dashboard">
-       
-        <img src="/assets/logo.png" width="32" height="32" alt="Icône personnalisée">
-        <h1>EntrepriseHub</h1>
-      </a>
-    </div>
-    <hr>
-    <ul nz-menu nzTheme="dark" class="lien" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
-      <li nz-menu-item nzMatchRouter routerLink="/dashboard">
-        <span nz-icon nzType="dashboard"></span>
-        <span>Dashboard</span>
-      </li>
+<ng-container *ngIf="isAuthenticated(); else authLayout">
+  <nz-layout class="app-layout">
+    <nz-sider class="menu-sidebar"
+      nzCollapsible
+      nzWidth="256px"
+      nzBreakpoint="md"
+      [(nzCollapsed)]="isCollapsed"
+      [nzTrigger]="null"
+    >
+      <div class="sidebar-logo">
+        <a routerLink="/dashboard">
+          <img src="/logo.png" width="42" height="42" alt="Logo DataFlow" style="border-radius: 50%;">
+          <h1>DataFlow</h1>
+        </a>
+      </div>
+      <hr>
+      <ul nz-menu nzTheme="dark" class="lien" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
+        <li nz-menu-item nzMatchRouter routerLink="/dashboard">
+          <span nz-icon nzType="dashboard"></span>
+          <span>Dashboard</span>
+        </li>
       
-      <li nz-submenu nzTitle="Gestion Commerciale" nzIcon="shopping">
-        <ul>
-          <li nz-menu-item nzMatchRouter routerLink="/clients">
-            <span nz-icon nzType="team"></span>
-            <span>Clients</span>
-          </li>
-          <li nz-menu-item nzMatchRouter routerLink="/products">
-            <span nz-icon nzType="inbox"></span>
-            <span>Produits</span>
-          </li>
-          <li nz-menu-item nzMatchRouter routerLink="/sales">
-            <span nz-icon nzType="shopping-cart"></span>
-            <span>Ventes</span>
-          </li>
-          <li nz-menu-item nzMatchRouter routerLink="/suppliers">
-            <span nz-icon nzType="shop"></span>
-            <span>Fournisseurs</span>
-          </li>
-        </ul>
-      </li>
+        <li nz-submenu nzTitle="Gestion Commerciale" nzIcon="shopping">
+          <ul>
+            <li nz-menu-item nzMatchRouter routerLink="/clients">
+              <span nz-icon nzType="team"></span>
+              <span>Clients</span>
+            </li>
+            <li nz-menu-item nzMatchRouter routerLink="/products">
+              <span nz-icon nzType="inbox"></span>
+              <span>Produits</span>
+            </li>
+            <li nz-menu-item nzMatchRouter routerLink="/sales">
+              <span nz-icon nzType="shopping-cart"></span>
+              <span>Ventes</span>
+            </li>
+            <li nz-menu-item nzMatchRouter routerLink="/suppliers">
+              <span nz-icon nzType="shop"></span>
+              <span>Fournisseurs</span>
+            </li>
+          </ul>
+        </li>
 
-      <li nz-submenu nzTitle="Gestion Financière" nzIcon="bank">
-        <ul>
-          <li nz-menu-item nzMatchRouter routerLink="/finance">
-            <span nz-icon nzType="dollar"></span>
-            <span>Finances</span>
-          </li>
-          <li nz-menu-item nzMatchRouter routerLink="/reports">
-            <span nz-icon nzType="bar-chart"></span>
-            <span>Rapports</span>
-          </li>
-        </ul>
-      </li>
+        <li nz-submenu nzTitle="Gestion Financière" nzIcon="bank">
+          <ul>
+            <li nz-menu-item nzMatchRouter routerLink="/finance">
+              <span nz-icon nzType="dollar"></span>
+              <span>Finances</span>
+            </li>
+            <li nz-menu-item nzMatchRouter routerLink="/reports">
+              <span nz-icon nzType="bar-chart"></span>
+              <span>Rapports</span>
+            </li>
+          </ul>
+        </li>
 
-      <li nz-submenu nzTitle="Ressources Humaines" nzIcon="user">
-        <ul>
-          <li nz-menu-item nzMatchRouter routerLink="/employees">
-            <span nz-icon nzType="user"></span>
-            <span>Employés</span>
-          </li>
-        </ul>
-      </li>
+        <li nz-submenu nzTitle="Ressources Humaines" nzIcon="user">
+          <ul>
+            <li nz-menu-item nzMatchRouter routerLink="/employees">
+              <span nz-icon nzType="user"></span>
+              <span>Employés</span>
+            </li>
+          </ul>
+        </li>
 
-      <li nz-submenu nzTitle="Configuration" nzIcon="setting">
-        <ul>
-          <li nz-menu-item nzMatchRouter routerLink="/settings">
-            <span nz-icon nzType="setting"></span>
-            <span>Paramètres</span>
-          </li>
-        </ul>
-      </li>
-      <li class="deconn" nz-menu-item (click)="logout()">
-        <span nz-icon nzType="logout"></span>
-        <span>Déconnexion</span>
-      </li>
-    </ul>
-  </nz-sider>
-  
-  <nz-layout>
-    <nz-header>
-      <div class="app-header">
-        <span class="header-trigger" (click)="isCollapsed = !isCollapsed">
-          <nz-icon class="trigger" [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'" />
-        </span>
-        <div class="header-right">
-          <a class="ant-dropdown-link" nz-dropdown [nzDropdownMenu]="userMenu">
-            <nz-avatar nzIcon="user"></nz-avatar>
-            <span class="ml-2">Utilisateur</span>
-            <span nz-icon nzType="down"></span>
-          </a>
-          <nz-dropdown-menu #userMenu="nzDropdownMenu">
-            <ul nz-menu nzSelectable>
-              <li nz-menu-item>
-                <span nz-icon nzType="user"></span>
-                <span>Profil</span>
-              </li>
-              <li nz-menu-item>
-                <span nz-icon nzType="setting"></span>
-                <span>Paramètres</span>
-              </li>
-              <li nz-menu-divider></li>
-              <li nz-menu-item (click)="logout()">
-                <span nz-icon nzType="logout"></span>
-                <span>Déconnexion</span>
-              </li>
-            </ul>
-          </nz-dropdown-menu>
-        </div>
-      </div>
-    </nz-header>
+        <li nz-submenu nzTitle="Configuration" nzIcon="setting">
+          <ul>
+            <li nz-menu-item nzMatchRouter routerLink="/settings">
+              <span nz-icon nzType="setting"></span>
+              <span>Paramètres</span>
+            </li>
+          </ul>
+        </li>
+        <li class="deconn" nz-menu-item (click)="logout()">
+          <span nz-icon nzType="logout"></span>
+          <span>Déconnexion</span>
+        </li>
+      </ul>
+    </nz-sider>
     
-    <nz-content>
-      <div class="inner-content">
-        <router-outlet></router-outlet>
-      </div>
-    </nz-content>
+    <nz-layout class="main-layout">
+      <nz-header>
+        <div class="app-header">
+          <span class="header-trigger" (click)="isCollapsed = !isCollapsed">
+            <nz-icon class="trigger" [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'" />
+          </span>
+          <div class="header-right">
+            <button nz-button nzType="text" nzShape="circle" (click)="toggleNotifications()" style="margin-right: 16px; position: relative;">
+              <nz-icon nzType="bell" nzTheme="outline"></nz-icon>
+              <span *ngIf="unreadNotifications > 0" class="notification-badge">
+                {{ unreadNotifications > 9 ? '9+' : unreadNotifications }}
+              </span>
+            </button>
+            <div *ngIf="showNotifications" class="notification-menu">
+              <nz-card nzTitle="Notifications" [nzBodyStyle]="{padding: '0'}">
+                <ul nz-menu style="max-height: 300px; overflow-y: auto;">
+                  <li nz-menu-item *ngIf="notifications.length === 0" class="notification-empty">Aucune notification</li>
+                  <li nz-menu-item *ngFor="let notif of notifications.slice(0, 6)" class="notification-item">
+                    <span [ngClass]="{'notification-unread': !notif.read}">{{ notif.message }}</span>
+                    <span class="notification-date">{{ notif.date | date:'short' }}</span>
+                  </li>
+                </ul>
+                <div style="text-align:center; padding: 10px 0; border-top: 1px solid #f0f0f0; background: #fafcff;">
+                  <a routerLink="/notifications" style="color: #1890ff; font-weight: 500;">Voir toutes les notifications</a>
+                </div>
+              </nz-card>
+            </div>
+            <a class="ant-dropdown-link" nz-dropdown [nzDropdownMenu]="userMenu">
+              <nz-avatar nzIcon="user"></nz-avatar>
+              <span class="ml-2">Utilisateur</span>
+              <span nz-icon nzType="down"></span>
+            </a>
+            <nz-dropdown-menu #userMenu="nzDropdownMenu">
+              <ul nz-menu nzSelectable>
+                <li nz-menu-item>
+                  <span nz-icon nzType="user"></span>
+                  <span>Profil</span>
+                </li>
+                <li nz-menu-item>
+                  <span nz-icon nzType="setting"></span>
+                  <span>Paramètres</span>
+                </li>
+                <li nz-menu-divider></li>
+                <li nz-menu-item (click)="logout()">
+                  <span nz-icon nzType="logout"></span>
+                  <span>Déconnexion</span>
+                </li>
+              </ul>
+            </nz-dropdown-menu>
+          </div>
+        </div>
+      </nz-header>
+      
+      <nz-content>
+        <div class="inner-content">
+          <router-outlet></router-outlet>
+        </div>
+      </nz-content>
+    </nz-layout>
   </nz-layout>
-</nz-layout>
+</ng-container>
+<ng-template #authLayout>
+  <router-outlet></router-outlet>
+</ng-template>
